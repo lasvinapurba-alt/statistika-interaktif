@@ -1,30 +1,37 @@
 
+document.getElementById("eksplorasi").innerHTML = `
+    <h2>Eksplorasi Data</h2>
+    <p>Masukkan beberapa angka dan pisahkan dengan tanda koma.</p>
+
+    <input type="text" id="dataAngka"
+    placeholder="Contoh: 70, 80, 75, 90, 80">
+
+    <button onclick="hitungStatistika()">
+        Hitung Statistik
+    </button>
+
+    <div id="hasil"></div>
+`;
+
 function hitungStatistika() {
     const input = document.getElementById("dataAngka").value.trim();
     const hasil = document.getElementById("hasil");
 
-    // Memeriksa input
     const bagianData = input.split(",").map(x => x.trim());
 
-    if (
-        input === "" ||
-        bagianData.some(x => x === "" || !Number.isFinite(Number(x)))
-    ) {
-        hasil.innerHTML = "<p>Masukkan angka yang benar dan pisahkan dengan koma!</p>";
+    if (input === "" || bagianData.some(
+        x => x === "" || !Number.isFinite(Number(x))
+    )) {
+        hasil.innerHTML = "<p>Masukkan angka dengan benar!</p>";
         return;
     }
 
-    // Mengubah input menjadi angka
     const data = bagianData.map(Number);
-
-    // Mengurutkan data
     data.sort((a, b) => a - b);
 
-    // Menghitung mean
     const jumlah = data.reduce((total, angka) => total + angka, 0);
     const mean = jumlah / data.length;
 
-    // Menghitung median
     const tengah = Math.floor(data.length / 2);
     let median;
 
@@ -34,7 +41,6 @@ function hitungStatistika() {
         median = data[tengah];
     }
 
-    // Menghitung modus
     const frekuensi = {};
 
     data.forEach(angka => {
@@ -46,21 +52,16 @@ function hitungStatistika() {
     const daftarModus = Object.keys(frekuensi)
         .filter(angka => frekuensi[angka] === frekuensiTertinggi);
 
-    let modus;
+    const modus = frekuensiTertinggi === 1
+        ? "Tidak ada modus"
+        : daftarModus.join(", ");
 
-    if (frekuensiTertinggi === 1) {
-        modus = "Tidak ada modus";
-    } else {
-        modus = daftarModus.join(", ");
-    }
-
-    // Menampilkan hasil
     hasil.innerHTML = `
         <h3>Hasil Perhitungan</h3>
-        <p><b>Data terurut:</b> ${data.join(", ")}</p>
-        <p><b>Banyak data:</b> ${data.length}</p>
-        <p><b>Mean:</b> ${mean.toFixed(2)}</p>
-        <p><b>Median:</b> ${median}</p>
-        <p><b>Modus:</b> ${modus}</p>
+        <p>Data terurut: ${data.join(", ")}</p>
+        <p>Banyak data: ${data.length}</p>
+        <p>Mean: ${mean.toFixed(2)}</p>
+        <p>Median: ${median}</p>
+        <p>Modus: ${modus}</p>
     `;
 }
