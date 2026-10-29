@@ -65,3 +65,85 @@ function hitungStatistika() {
         <p>Modus: ${modus}</p>
     `;
 }
+
+
+// KUIS STATISTIKA INTERAKTIF
+
+const soalKuis = [
+    {
+        soal: "Rata-rata dari data 70, 80, dan 90 adalah ...",
+        pilihan: ["70", "80", "90"],
+        jawaban: "80"
+    },
+    {
+        soal: "Median dari data 60, 70, 80, 90, 100 adalah ...",
+        pilihan: ["70", "80", "90"],
+        jawaban: "80"
+    },
+    {
+        soal: "Modus dari data 70, 80, 80, 90, 100 adalah ...",
+        pilihan: ["70", "80", "90"],
+        jawaban: "80"
+    }
+];
+
+let nomorSoal = 0;
+let skor = 0;
+let sudahMenjawab = false;
+
+function tampilkanSoal() {
+    const bagianKuis = document.getElementById("kuis");
+    const soal = soalKuis[nomorSoal];
+
+    sudahMenjawab = false;
+
+    bagianKuis.innerHTML = `
+        <h2>Kuis Statistika</h2>
+        <p>Soal ${nomorSoal + 1} dari ${soalKuis.length}</p>
+        <h3>${soal.soal}</h3>
+
+        ${soal.pilihan.map(pilihan => `
+            <button onclick="periksaJawaban('${pilihan}')">
+                ${pilihan}
+            </button>
+        `).join("")}
+
+        <p id="pesanKuis"></p>
+    `;
+}
+
+function periksaJawaban(pilihan) {
+    if (sudahMenjawab) return;
+    sudahMenjawab = true;
+
+    if (pilihan === soalKuis[nomorSoal].jawaban) {
+        skor++;
+        document.getElementById("pesanKuis").innerHTML =
+            "Benar! Jawaban kamu tepat.";
+    } else {
+        document.getElementById("pesanKuis").innerHTML =
+            "Belum tepat. Pelajari kembali materinya.";
+    }
+
+    setTimeout(() => {
+        nomorSoal++;
+
+        if (nomorSoal < soalKuis.length) {
+            tampilkanSoal();
+        } else {
+            document.getElementById("kuis").innerHTML = `
+                <h2>Kuis Selesai!</h2>
+                <h3>Skor kamu: ${skor} dari ${soalKuis.length}</h3>
+                <button onclick="ulangKuis()">Ulangi Kuis</button>
+            `;
+        }
+    }, 1200);
+}
+
+function ulangKuis() {
+    nomorSoal = 0;
+    skor = 0;
+    tampilkanSoal();
+}
+
+tampilkanSoal();
